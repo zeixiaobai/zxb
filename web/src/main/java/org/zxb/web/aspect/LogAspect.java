@@ -26,7 +26,6 @@ import java.util.ArrayList;
  */
 @Aspect
 @Slf4j
-@Component
 @Order(0)
 public class LogAspect {
 

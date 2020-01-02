@@ -8,17 +8,20 @@ import org.zxb.web.annotation.ZxbLog;
 import org.zxb.web.bean.User;
 import org.zxb.web.exception.ValidateException;
 
+import javax.validation.constraints.NotNull;
+
 /**
- * @description  BaseController
  * @author zjx
+ * @description BaseController
  * @date 2020/1/2
  */
 @RestController
 @ZxbLog
-public class BTController extends BaseController{
+public class BTController extends BaseController {
 
     @GetMapping("test/get")
-    public String get(@RequestParam(name="id2")  String id){
+    public String get(@NotNull(message = "not.null") String id) throws ValidateException {
+        validated(this, id);
         System.out.println(id);
         return super.build(id);
     }

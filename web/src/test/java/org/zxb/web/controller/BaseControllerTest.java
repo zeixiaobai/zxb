@@ -28,7 +28,7 @@ public class BaseControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        org.zxb.web.dto.Result result = new Result(200,"suecccess");
+        org.zxb.web.dto.Result result = new Result(HttpStatus.OK.value(),HttpStatus.OK.getReasonPhrase());
         result.setData("123");
         this.mvc.perform(get("/test/get?id2=123").accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk()).andExpect(content().string(JSON.toJSONString(result)));
@@ -40,8 +40,9 @@ public class BaseControllerTest {
         User user = new User();
         user.setName("zhangsan");
 
-        org.zxb.web.dto.Result result =  new Result(HttpStatus.OK.value(),HttpStatus.OK.getReasonPhrase());
-        result.setData(user);
+        org.zxb.web.dto.Result result = new Result(HttpStatus.OK.value(),HttpStatus.OK.getReasonPhrase());
+        result.setMessage("不能为空");
+      //  result.setData(user);
 
         this.mvc.perform(get("/test/getUser?name=zhangsan").accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk()).andExpect(content().string(JSON.toJSONString(result)));
