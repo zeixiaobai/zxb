@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mybatis-support" />
+        <module name="common" />
+        <module name="jpa-support" />
+        <module name="web" />
+        <module name="redis-support" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mybatissupport" target="1.8" />
+      <module name="mybats-support" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
+      <module name="jpa-support" options="-parameters" />
+      <module name="mybatis-support" options="-parameters" />
+      <module name="mybatissupport" options="-parameters" />
+      <module name="mybats-support" options="-parameters" />
+      <module name="redis-support" options="-parameters" />
+      <module name="web" options="-parameters" />
+    </option>
+  </component>
+</project>
