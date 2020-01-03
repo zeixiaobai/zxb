@@ -76,30 +76,6 @@ public abstract class BaseController {
     }
 
     /**
-     * @description 校验注解添加参数上面
-     * @author zjx
-     */
-    protected void validated(Object obj, Object[] args, Class<?>... groups) throws ValidateException {
-        // 获取调用方法名字
-        StackTraceElement[] ses = Thread.currentThread().getStackTrace();
-        String methodName = ses[2].getMethodName();
-        Method method = null;
-        // 通过方法名字找，不能有重复的方法名字
-        Method[] methods = obj.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            Method method_ = methods[i];
-            if (methods[i].getName().equals(methodName)) {
-                method = method_;
-            }
-        }
-        // 对方法参数的校验
-        ExecutableValidator evalidator = validator.forExecutables();
-        Set<ConstraintViolation<Object>> constraintViolationSet = evalidator.validateParameters(obj, method, args, groups);
-        validateConverResult(constraintViolationSet,true);
-
-    }
-
-    /**
      * @description 错误信息封装成result DTO，没有则返回空
      * @author zjx
      */

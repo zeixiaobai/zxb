@@ -9,9 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-import org.zxb.web.dto.Result;
-import org.zxb.web.exception.ValidateException;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

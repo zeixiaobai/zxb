@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 public class BTController extends BaseController {
 
     @GetMapping("test/get")
-    public String get(@NotNull(message = "not.null") String id) throws ValidateException {
+    public String get(@NotNull(message = "{not.null}") String id) throws ValidateException {
         validated(this, id);
         System.out.println(id);
         return super.build(id);
