@@ -18,14 +18,11 @@ public class MybatisTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Value(value="${test}")
-    private String test;
-
     @Test
     public void boot(){
-        Assert.assertEquals("111",test);
         jdbcTemplate.execute("select 1");
         assert(true);
     }
+
 
 }
