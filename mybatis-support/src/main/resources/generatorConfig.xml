@@ -17,7 +17,7 @@
        <!-- <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
 
         <commentGenerator>
-            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是： false:否 -->
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
 
@@ -32,22 +32,25 @@
         </javaTypeResolver>
 
         <!-- entity -->
-        <javaModelGenerator targetPackage="com.zxb.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="org.zxb.entity" targetProject="src/main/java">
             <!-- 继承类-->
-            <property name="rootClass" value="com.zxb.TestBean"/>
+            <property name="rootClass" value="org.zxb.entity.BaseEntity"/>
         </javaModelGenerator>
 
         <!-- xml -->
-        <sqlMapGenerator targetPackage="com.zxb.dao" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="org.zxb.dao.xml" targetProject="src/main/resources"/>
 
         <!-- mapper -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zxb.dao" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="org.zxb.dao" targetProject="src/main/java">
             <!-- 继承类-->
-            <property name="rootInterface" value="com.zxb.TestInterface"/>
+            <property name="rootInterface" value="org.zxb.dao.BaseDAO"/>
         </javaClientGenerator>
 
         <!--表名-->
-        <table tableName="tp_gateway_route" domainObjectName="Route">
+        <table tableName="tp_user" domainObjectName="User"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
