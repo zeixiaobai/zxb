@@ -28,6 +28,7 @@
         <module>jpa-support</module>
         <module>mybatis-support</module>
         <module>redis-support</module>
+        <module>rocketmq-support</module>
     </modules>
 
     <build>

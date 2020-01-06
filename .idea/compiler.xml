@@ -6,10 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mybatis-support" />
+        <module name="web" />
+        <module name="rocketmq-support" />
         <module name="common" />
         <module name="jpa-support" />
-        <module name="web" />
+        <module name="mybatis-support" />
         <module name="redis-support" />
       </profile>
     </annotationProcessing>
@@ -26,6 +27,7 @@
       <module name="mybatissupport" options="-parameters" />
       <module name="mybats-support" options="-parameters" />
       <module name="redis-support" options="-parameters" />
+      <module name="rocketmq-support" options="-parameters" />
       <module name="web" options="-parameters" />
     </option>
   </component>
