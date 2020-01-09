@@ -6,10 +6,11 @@
 <generatorConfiguration>
 
     <context id="mysqlgenerator" targetRuntime="MyBatis3">
+
         <property name="autoDelimitKeywords" value="true"/>
         <!--可以使用``包括字段名，避免字段名与sql保留字冲突报错-->
-        <!--<property name="beginningDelimiter" value="`"/>
-        <property name="endingDelimiter" value="`"/>-->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
 
         <!-- 自动生成toString方法 -->
         <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
@@ -38,7 +39,7 @@
         </javaModelGenerator>
 
         <!-- xml -->
-        <sqlMapGenerator targetPackage="org.zxb.dao.xml" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
         <!-- mapper -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="org.zxb.dao" targetProject="src/main/java">
@@ -51,7 +52,6 @@
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
     </context>

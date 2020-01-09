@@ -22,7 +22,7 @@ import java.util.Properties;
 @Intercepts({@Signature(
         type = StatementHandler.class,
         method = "prepare",
-        args = {Connection.class})})
+        args = {Connection.class, Integer.class})})
 public class ExamplePlugin implements Interceptor {
 
     private ThreadLocal threadLocal = new ThreadLocal();
@@ -30,28 +30,27 @@ public class ExamplePlugin implements Interceptor {
     private Properties properties = new Properties();
 
     public Object intercept(Invocation invocation) throws Throwable {
-        StatementHandler statementHandler = getUnProxyObject(invocation);
+        // 取出被拦截的对象
+        StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
+
+        // 如果是代理类直接跳过
         MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
-        String sql = getSql(metaObject);
-        if (!checkSelect(sql)) {
-            // 不是select语句，进入责任链下一层
-            return invocation.proceed();
+        if (!metaObject.hasGetter("h")) {
+            BoundSql boundSql = statementHandler.getBoundSql();
+            String sql = boundSql.getSql();
+            if (checkSelect(sql)) {
+                Object obj = threadLocal.get();
+                if (obj != null) {
+                    Page page = (Page) obj;
+                    getTotal(invocation, boundSql, page);
+                    changeSql(boundSql, page);
+                }
+            }
         }
-
-        BoundSql boundSql = (BoundSql) metaObject.getValue("delegate.boundSql");
-        Object parameterObject = boundSql.getParameterObject();
-
-        String page = null;
-        if (page == null) {
-            // 没有传入page对象，不执行分页处理，进入责任链下一层
-            return invocation.proceed();
-        }
-
-        return changeSql(invocation, metaObject, boundSql);
         // implement pre processing if need
-//        Object returnObject = invocation.proceed();
+        Object returnObject = invocation.proceed();
         // implement post processing if need
-//        return returnObject;
+        return returnObject;
     }
 
     @Override
@@ -65,24 +64,6 @@ public class ExamplePlugin implements Interceptor {
 
     public ThreadLocal getThreadLocal() {
         return threadLocal;
-    }
-
-    /**
-     * 从代理对象中分离出真实对象
-     * @param invocation
-     * @return
-     */
-    private StatementHandler getUnProxyObject(Invocation invocation) {
-        // 取出被拦截的对象
-        StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
-        MetaObject metaStmtHandler = SystemMetaObject.forObject(statementHandler);
-        Object object = null;
-        // 分离代理对象
-        while (metaStmtHandler.hasGetter("h")) {
-            object = metaStmtHandler.getValue("h");
-            metaStmtHandler = SystemMetaObject.forObject(object);
-        }
-        return object == null ? statementHandler : (StatementHandler) object;
     }
 
     /**
@@ -100,19 +81,20 @@ public class ExamplePlugin implements Interceptor {
      * 获取数据总数
      *
      * @param invocation
-     * @param metaObject
      * @param boundSql
+     * @param page
      * @return
      */
-    private int getTotal(Invocation invocation, MetaObject metaObject, BoundSql boundSql) {
+    private void getTotal(Invocation invocation, BoundSql boundSql, Page page) {
+        MetaObject metaObject = SystemMetaObject.forObject(invocation.getTarget());
         // 获取当前的mappedStatement对象
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
         // 获取配置对象
         Configuration configuration = mappedStatement.getConfiguration();
         // 获取当前需要执行的sql
-        String sql = getSql(metaObject);
+        String sql = boundSql.getSql();
         // 改写sql语句，实现返回数据总数 $_paging取名是为了防止数据库表重名
-        String countSql = "select count(1) as total from (" + sql + ") $_paging";
+        String countSql = "select count(1) as total from (" + sql + ") total_talbe";
         // 获取拦截方法参数，拦截的是connection对象
         Connection connection = (Connection) invocation.getArgs()[0];
         PreparedStatement pstmt = null;
@@ -145,55 +127,25 @@ public class ExamplePlugin implements Interceptor {
                 }
             }
         }
-
-        // 返回总数据数
-        return total;
+        // 设置总数据数
+        page.setTotal(total);
     }
 
 
     /**
      * 修改当前查询的sql
-     *
-     * @param invocation
-     * @param metaObject
      * @param boundSql
+     * @param page
      * @return
      */
-    private Object changeSql(Invocation invocation, MetaObject metaObject, BoundSql boundSql) throws Exception {
+    private void changeSql(BoundSql boundSql, Page page) throws Exception {
         // 获取当前查询的sql
-        String sql = getSql(metaObject);
-        // 修改sql，$_paging_table_limit取名是为了防止数据库表重名
-        String newSql = "select * from (" + sql + ") $_paging_table_limit limit ?, ?";
+        String sql = boundSql.getSql();
+        // 反射修改sql
+        MetaObject metaStmtHandler = SystemMetaObject.forObject(boundSql);
+        String newSql = sql+" limit "+ page.getPageNum() + "," + page.getEverypageNum();
         // 设置当前sql为修改后的sql
-        setSql(metaObject, newSql);
-
-        // 获取PreparedStatement对象
-        PreparedStatement pstmt = (PreparedStatement) invocation.proceed();
-        // 获取sql的总参数个数
-        int parameCount = pstmt.getParameterMetaData().getParameterCount();
-        // 设置分页参数
-        pstmt.setInt(parameCount - 1, 1);
-        pstmt.setInt(parameCount, 10);
-
-        return pstmt;
+        metaStmtHandler.setValue("sql", newSql);
     }
 
-    /**
-     * 获取当前查询的sql
-     *
-     * @param metaObject
-     * @return
-     */
-    private String getSql(MetaObject metaObject) {
-        return (String) metaObject.getValue("delegate.boundSql.sql");
-    }
-
-    /**
-     * 设置当前查询的sql
-     *
-     * @param metaObject
-     */
-    private void setSql(MetaObject metaObject, String sql) {
-        metaObject.setValue("delegate.boundSql.sql", sql);
-    }
 }

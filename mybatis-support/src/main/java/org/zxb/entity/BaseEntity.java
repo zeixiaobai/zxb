@@ -10,7 +10,7 @@ public abstract class BaseEntity implements Serializable {
 
     public Integer id;
 
-    public String craeteBy;
+    public String createBy;
 
     public Date createTime;
 
