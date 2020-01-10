@@ -20,4 +20,6 @@ mybatis:
 
 logging:
   level:
-    root: debug
+    org:
+      zxb:
+        dao: debug

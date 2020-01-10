@@ -24,7 +24,6 @@ import java.util.Set;
 public abstract class BaseController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
-    ;
 
     @Autowired
     private Validator validator;

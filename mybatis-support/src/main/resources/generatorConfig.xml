@@ -15,7 +15,10 @@
         <!-- 自动生成toString方法 -->
         <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
         <!-- 自动生成equals方法和hashcode方法 -->
-       <!-- <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
+        <!-- <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
+        <plugin type="org.zxb.plun.ModelPlugin"/>
+        <plugin type="org.zxb.plun.SqlMapperPlugin"/>
+        <plugin type="org.zxb.plun.MapperPlugin"/>
 
         <commentGenerator>
             <!-- 是否去除自动生成的注释 true：是： false:否 -->
@@ -33,26 +36,28 @@
         </javaTypeResolver>
 
         <!-- entity -->
-        <javaModelGenerator targetPackage="org.zxb.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="org.zxb.entity" targetProject="mybatis-support/src/main/java">
             <!-- 继承类-->
             <property name="rootClass" value="org.zxb.entity.BaseEntity"/>
         </javaModelGenerator>
 
         <!-- xml -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="mybatis-support/src/main/resources"/>
 
         <!-- mapper -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="org.zxb.dao" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="org.zxb.dao" targetProject="mybatis-support/src/main/java">
             <!-- 继承类-->
             <property name="rootInterface" value="org.zxb.dao.BaseDAO"/>
         </javaClientGenerator>
 
         <!--表名-->
-        <table tableName="tp_user" domainObjectName="User"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+        <!-- <table tableName="tp_user" domainObjectName="User"
+                enableCountByExample="false" enableUpdateByExample="false"
+                enableDeleteByExample="false" enableSelectByExample="false"
+                selectByExampleQueryId="false" enableSelectByPrimaryKey="false">
+         </table>-->
+        <table tableName="tp_user" domainObjectName="User"></table>
+
 
     </context>
 </generatorConfiguration>

@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,29 +38,45 @@ public class MybatisTest {
     @Test
     public void insert() {
         User user = new User();
-        user.setId(4);
-        user.setUsername("wanwu");
+        user.setId(7);
+        user.setUsername("zhaoqi");
         user.setPassword("123456");
-        user.setAddress("龙岗");
-        user.setAge(28);
+        user.setAddress("南山");
+        user.setAge(30);
         userMapper.insert(user);
     }
 
     @Test
-    public void select() {
-        User user = userMapper.selectByPrimaryKey(1);
-        System.out.println(user.getUsername());
+    public void delete() {
+        User user = new User();
+        user.setUsername("zhaoqi");
+        int i = userMapper.delete(user);
+        Assert.assertTrue(i == 1);
     }
 
     @Test
-    public void selectList() {
+    public void update() {
+        User user = new User();
+        user.setUsername("wanwu666");
+        User whe = new User();
+        whe.setId(6);
+        int i = userMapper.update(user, whe);
+        Assert.assertTrue(i == 1);
+    }
 
-        Page page = new Page();
-        page.setPageNum(0);
-        page.setEverypageNum(2);
-        myInterceptor.getThreadLocal().set(page);
+    @Test
+    public void select() {
+        List<User> list = userMapper.select(null);
+        for (User user2 : list) {
+            System.out.println(user2.getId() + " " + user2.getUsername());
+        }
+        Assert.assertEquals("zhangsan", list.get(0).getUsername());
 
-        List<User> list = userMapper.selectAll();
-        Assert.assertEquals(2, list.size());
+        User user = new User();
+        user.setId(1);
+        list = userMapper.select(user);
+        for (User user2 : list) {
+            System.out.println(user2.getId() + " " + user2.getUsername());
+        }
     }
 }
