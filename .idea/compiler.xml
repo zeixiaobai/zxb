@@ -10,6 +10,7 @@
         <module name="rocketmq-support" />
         <module name="common" />
         <module name="jpa-support" />
+        <module name="ouath2" />
         <module name="mybatis-support" />
         <module name="redis-support" />
       </profile>
@@ -26,6 +27,7 @@
       <module name="mybatis-support" options="-parameters" />
       <module name="mybatissupport" options="-parameters" />
       <module name="mybats-support" options="-parameters" />
+      <module name="ouath2" options="-parameters" />
       <module name="redis-support" options="-parameters" />
       <module name="rocketmq-support" options="-parameters" />
       <module name="web" options="-parameters" />

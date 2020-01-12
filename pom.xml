@@ -29,6 +29,7 @@
         <module>mybatis-support</module>
         <module>redis-support</module>
         <module>rocketmq-support</module>
+        <module>ouath2</module>
     </modules>
 
     <build>
