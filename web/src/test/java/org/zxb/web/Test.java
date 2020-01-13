@@ -1,5 +1,6 @@
 package org.zxb.web;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.BindException;
 import org.springframework.validation.DataBinder;
@@ -25,5 +26,6 @@ public class Test {
 
         System.out.println(user);
         System.out.println(close);
+
     }
 }

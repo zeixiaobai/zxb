@@ -1,3 +1,4 @@
+/*
 package org.zxb;
 
 import org.junit.Assert;
@@ -80,3 +81,4 @@ public class MybatisTest {
         }
     }
 }
+*/

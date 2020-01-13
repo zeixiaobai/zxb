@@ -1,4 +1,5 @@
-package org.zxb.web.exception;
+package org.zxb.web.config;
+
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.zxb.web.dto.Result;
+import org.zxb.common.dto.Result;
+import org.zxb.common.exception.ZxbException;
 
 import javax.annotation.Resource;
 import java.util.Locale;
@@ -21,7 +23,7 @@ import java.util.Locale;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalExeception {
+public class GlobalException {
 
     @Resource(name = "messageSource")
     private MessageSource messageSource;
@@ -29,7 +31,7 @@ public class GlobalExeception {
     @ExceptionHandler(value = Exception.class)
     public String errorHandler(Exception e) {
         // 对于校验错误 不打堆栈信息
-        if (e instanceof ValidateException) {
+        if (e instanceof ZxbException) {
             Locale locale = LocaleContextHolder.getLocale();
             String validateMsg = e.getMessage();
             if (StringUtils.isEmpty(validateMsg)) {
@@ -45,15 +47,15 @@ public class GlobalExeception {
                     message = e.getMessage();
                 }
             }
-            if (!StringUtils.isEmpty(((ValidateException) e).getFieldName())) {
-                message = ((ValidateException) e).getFieldName() + message;
+            if (!StringUtils.isEmpty(((ZxbException) e).getFieldName())) {
+                message = ((ZxbException) e).getFieldName() + message;
             }
             log.info(message);
-            return JSON.toJSONString(new Result(HttpStatus.OK.value(), message));
+            return JSON.toJSONString(Result.buildSuccess(message));
         } else {
             // 全局错误处理
             log.error(e.getMessage(), e);
-            return JSON.toJSONString(new Result(0, "未知错误:" + e.getMessage()));
+            return JSON.toJSONString(Result.buildFail("未知错误:" + e.getMessage()));
         }
     }
 

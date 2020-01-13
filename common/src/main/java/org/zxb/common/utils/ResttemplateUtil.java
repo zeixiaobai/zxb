@@ -1,4 +1,4 @@
-package org.zxb.web.utils;
+package org.zxb.common.utils;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,14 +13,16 @@ import org.springframework.web.client.RestTemplate;
  */
 public class ResttemplateUtil {
 
-    RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate;
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public void post() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.ACCEPT, "");
-
         HttpEntity httpEntity = new HttpEntity("", httpHeaders);
-
         ResponseEntity<String> resp = restTemplate.exchange("", HttpMethod.POST, null, String.class);
     }
 

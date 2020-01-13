@@ -1,15 +1,12 @@
 package org.zxb.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.zxb.web.aspect.LogAspect;
-import org.zxb.web.exception.GlobalExeception;
 
 /**
  * @description: zxb自动注入
@@ -34,8 +31,8 @@ public class ZXBAutoConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public GlobalExeception getGlobalExeception() {
-        return new GlobalExeception();
+    public GlobalException getGlobalExeception() {
+        return new GlobalException();
     }
 
     @Bean
