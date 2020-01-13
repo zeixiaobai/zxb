@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.zxb.web.dto.Result;
+import org.zxb.common.dto.Result;
 import org.zxb.web.exception.ValidateException;
 
 import javax.validation.ConstraintViolation;
@@ -36,7 +36,7 @@ public abstract class BaseController {
      * @return
      */
     protected String build(Object obj) {
-        Result result = new Result(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+        Result result = Result.buildSuccess("OK");
         result.setData(obj);
         return JSON.toJSONString(result);
     }
