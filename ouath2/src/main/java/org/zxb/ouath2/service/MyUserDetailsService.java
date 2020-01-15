@@ -17,10 +17,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println(username + "----------------------");
-
         // 数据库中查找
         String password = "{noop}" + "123456";
-
         return User.withUsername(username).password(password).authorities("USER").disabled(false).build();
     }
 }

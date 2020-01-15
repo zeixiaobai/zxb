@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author: zjx
  * @time: 2020/1/12 10:12
  */
+
 @SpringBootApplication
 public class Ouath2Application {
 

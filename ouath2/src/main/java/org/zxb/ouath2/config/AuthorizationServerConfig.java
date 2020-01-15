@@ -75,7 +75,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("clientId")
                 .secret("{noop}secret")
                 //.authorizedGrantTypes("authorization_code").redirectUris("http://tech.taiji.com.cn/")
-                .authorizedGrantTypes("password")
+                .authorizedGrantTypes("authorization_code", "client_credentials", "refresh_token",
+                        "password", "implicit")
                 .scopes("all");
     }
 
