@@ -39,7 +39,7 @@ public class RedisTest {
      */
     @Test
     public void get() {
-       String object = redisTemplate.opsForValue().get("name-timeout");
+       String object = redisTemplate.opsForValue().get("name");
         System.out.println(object);
     }
 

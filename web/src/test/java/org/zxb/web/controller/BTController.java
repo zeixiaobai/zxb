@@ -1,9 +1,6 @@
 package org.zxb.web.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zxb.web.annotation.ZxbLog;
 import org.zxb.web.bean.User;
 import org.zxb.web.exception.ValidateException;
@@ -17,16 +14,17 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @ZxbLog
+@RequestMapping("/proxy")
 public class BTController extends BaseController {
 
-    @GetMapping("test/get")
+    @GetMapping("test")
     public String get(@NotNull(message = "{not.null}") String id) throws ValidateException {
         validated(this, id);
         System.out.println(id);
         return super.build(id);
     }
 
-    @GetMapping("test/getUser")
+    @GetMapping("user")
     public String getUser(User user) throws ValidateException {
         validate(user);
         return super.build(user);
