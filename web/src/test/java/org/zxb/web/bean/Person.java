@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class Person {
 
-    @NotBlank(message="not.null")
+    @NotBlank(message="like不能为空")
     private String like;
 
     private String level;

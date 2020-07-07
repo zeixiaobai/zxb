@@ -13,6 +13,7 @@ public class LoggerUtil {
     }
 
     /**
+     * @param log    日志对象
      * @param format    格式化字符串
      * @param arguments 字符串占位符参数
      */
@@ -23,15 +24,28 @@ public class LoggerUtil {
     }
 
     /**
+     * @param log    日志对象
      * @param format    格式化字符串
      * @param arguments 字符串占位符参数
      */
+
     public static void debug(Logger log, String format, Object... arguments) {
         if (log.isDebugEnabled()) {
 //                LocationAwareLogger logger = (LocationAwareLogger) log;
 //                logger.log(null, FQCN, LocationAwareLogger.DEBUG_INT, format, arguments, null);
-                log.debug(format, arguments);
+            log.debug(format, arguments);
         }
     }
+
+    /**
+     * @param log 日志对象
+     * @param e   错误信息
+     */
+    public static void error(Logger log, Exception e) {
+        if (log.isErrorEnabled()) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
 
 }

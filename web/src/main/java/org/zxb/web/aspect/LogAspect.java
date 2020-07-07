@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class LogAspect {
 
     /* 日志最大长度 */
-    private static final int LOG_MAX_LENGTH = 2000;
+    private static final int LOG_MAX_LENGTH = 5000;
 
     @Autowired
     private Validator validator;
@@ -40,9 +40,7 @@ public class LogAspect {
 
     @Around("logPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-
         Object result = null;
-
         try {
             MethodSignature signature = (MethodSignature) point.getSignature();
             Method method = signature.getMethod();
@@ -50,11 +48,19 @@ public class LogAspect {
             String className = point.getTarget().getClass().getName();
             // 请求的参数
             Object[] args = point.getArgs();
-            args = filterArgs(args);
-            pringLog(args, method.getName(), className);
-
+            if (args != null) {
+                args = filterArgs(args);
+                pringLog(args, method.getName(), className);
+            }
             // 执行方法
             result = point.proceed();
+            // 响应参数
+            String argLog = result.toString();
+            if (argLog.length() > LOG_MAX_LENGTH) {
+                LoggerUtil.info(log, argLog.substring(0, LOG_MAX_LENGTH));
+            }else{
+                LoggerUtil.info(log, argLog);
+            }
         } catch (Exception e) {
             throw e;
         }
@@ -66,24 +72,30 @@ public class LogAspect {
      * @author zjx
      */
     private void pringLog(Object[] args, String methodName, String className) {
+        if (args == null) {
+            return;
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
-            // 最大输出2000
-            String arglog = JSON.toJSONString(args[i]);
-            if (arglog.length() > LOG_MAX_LENGTH) {
-                sb.append("method name: ")
-                        .append(className)
-                        .append(".")
-                        .append(methodName)
-                        .append(": ")
-                        .append(arglog.substring(0, LOG_MAX_LENGTH));
+            String argLog = null;
+            if (args[i] != null) {
+                // 最大输出2000
+                argLog = args[i].toString();
             } else {
-                sb.append("method name: ")
-                        .append(className)
+                argLog = "null";
+            }
+            if (argLog.length() > LOG_MAX_LENGTH) {
+                sb.append(className)
                         .append(".")
                         .append(methodName)
                         .append(": ")
-                        .append(arglog);
+                        .append(argLog.substring(0, LOG_MAX_LENGTH));
+            } else {
+                sb.append(className)
+                        .append(".")
+                        .append(methodName)
+                        .append(": ")
+                        .append(argLog);
             }
             LoggerUtil.info(log, sb.toString());
         }

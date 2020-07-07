@@ -12,15 +12,15 @@ import javax.validation.constraints.NotNull;
 @Data
 public class User {
 
-    @NotBlank(message="not.null")
+    @NotBlank(message = "name不能为空")
     private String name;
 
     private int age;
 
-    @NotBlank(message="not.null")
+    @NotBlank(message = "time不能为空")
     private String time;
 
-    @NotNull(message = "not.null")
-    @Valid
+//    @NotNull(message = "person不能为空")
+//    @Valid
     private Person person;
 }

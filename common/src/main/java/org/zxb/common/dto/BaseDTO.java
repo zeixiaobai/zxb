@@ -7,6 +7,6 @@ import java.io.Serializable;
  * @author zjx
  * @date 2020/1/13
  */
-public abstract class BaseDTO implements Serializable {
+public class BaseDTO implements Serializable {
 
 }

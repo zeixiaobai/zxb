@@ -1,10 +1,14 @@
 package org.zxb.web.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.zxb.common.dto.Result;
 import org.zxb.web.annotation.ZxbLog;
 import org.zxb.web.bean.User;
-import org.zxb.web.exception.ValidateException;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -14,20 +18,19 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @ZxbLog
-@RequestMapping("/proxy")
-public class BTController extends BaseController {
+@RequestMapping("/test")
+@Validated
+public class BTController  {
 
-    @GetMapping("test")
-    public String get(@NotNull(message = "{not.null}") String id) throws ValidateException {
-        validated(this, id);
+    @GetMapping("get")
+    public Result get(@NotNull(message = "id不能为空") String id) {
         System.out.println(id);
-        return super.build(id);
+        return Result.buildSuccess(id);
     }
 
-    @GetMapping("user")
-    public String getUser(User user) throws ValidateException {
-        validate(user);
-        return super.build(user);
+    @GetMapping("getUser")
+    public Result getUser(@Valid User user) {
+        return Result.buildSuccess(user);
     }
 
 }

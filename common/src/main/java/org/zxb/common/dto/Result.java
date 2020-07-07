@@ -21,13 +21,19 @@ public class Result extends BaseDTO {
         this.message = message;
     }
 
+    public Result(int code, String message, Object data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
     /**
      * @description 返回成功实体
      * @author zjx
      * @date 2020/1/13
      */
-    public static Result buildSuccess(String message) {
-        return new Result(200, message);
+    public static Result buildSuccess(Object data) {
+        return new Result(200, "success", data);
     }
 
 }
