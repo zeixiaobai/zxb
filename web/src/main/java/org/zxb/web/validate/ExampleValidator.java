@@ -17,12 +17,10 @@ public class ExampleValidator implements ConstraintValidator<ExampleValidatorAnn
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         // 处理逻辑
-
         // 禁止默认消息返回
         // context.disableDefaultConstraintViolation();
         // 自定义返回消息
         // context.buildConstraintViolationWithTemplate("{custom.error}").addConstraintViolation();
-
         return false;
     }
 }

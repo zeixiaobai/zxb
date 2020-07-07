@@ -11,7 +11,6 @@
         <module name="rocketmq-support" />
         <module name="common" />
         <module name="jpa-support" />
-        <module name="webservice" />
         <module name="ouath2" />
         <module name="mybatis-support" />
         <module name="redis-support" />
@@ -20,6 +19,7 @@
     <bytecodeTargetLevel>
       <module name="mybatissupport" target="1.8" />
       <module name="mybats-support" target="1.8" />
+      <module name="webservice" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

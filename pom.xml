@@ -30,7 +30,6 @@
         <module>redis-support</module>
         <module>rocketmq-support</module>
         <module>ouath2</module>
-        <module>webservice</module>
     </modules>
 
     <build>
