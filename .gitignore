@@ -1,0 +1,7 @@
+/web/target/
+/common/target/
+/jpa-support/target/
+/mybatis-support/target/
+/ouath2/target/
+/redis-support/target/
+/rocketmq-support/target/
