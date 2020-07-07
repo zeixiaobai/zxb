@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.zxb.common.utils.LoggerUtil;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -84,7 +85,7 @@ public class LogAspect {
                         .append(": ")
                         .append(arglog);
             }
-            log.info(sb.toString());
+            LoggerUtil.info(log, sb.toString());
         }
     }
 

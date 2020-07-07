@@ -5,31 +5,20 @@ package org.zxb.common.exception;
  * @description zxb 错误父类
  * @date 2020/1/13
  */
-public class ZxbException extends Exception {
+public class ZxbException extends RuntimeException {
 
-    protected int code;
-
-    protected String fieldName;
+    protected String code;
 
     public ZxbException(String messag) {
         super(messag);
     }
 
-    public ZxbException(int code, String messag) {
+    public ZxbException(String code, String messag) {
         this(messag);
         this.code = code;
     }
 
-    public ZxbException(String fieldName, String messag) {
-        this(messag);
-        this.fieldName = fieldName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 

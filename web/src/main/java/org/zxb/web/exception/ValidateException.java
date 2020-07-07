@@ -15,7 +15,6 @@ public class ValidateException extends ZxbException {
 
     public ValidateException(String fieldName, String message) {
         this(message);
-        this.fieldName = fieldName;
     }
 
 }

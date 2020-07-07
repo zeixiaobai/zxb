@@ -33,29 +33,19 @@ public class GlobalException {
         // 对于校验错误 不打堆栈信息
         if (e instanceof ZxbException) {
             Locale locale = LocaleContextHolder.getLocale();
-            String validateMsg = e.getMessage();
-            if (StringUtils.isEmpty(validateMsg)) {
-                validateMsg = "";
-            }
-            String message = validateMsg.replace("{", "").replace("}", "").trim();
+            String code = ((ZxbException) e).getCode();
             /* 没有配置 打印错误日志，不抛出错误 */
-            if (!validateMsg.trim().equals(message)) {
-                try {
-                    message = messageSource.getMessage(message, null, locale);
-                } catch (NoSuchMessageException ex) {
-                    log.error(ex.getMessage(), e);
-                    message = e.getMessage();
-                }
+            try {
+                String message = messageSource.getMessage(code, null, locale);
+                return JSON.toJSONString(new Result(Integer.valueOf(code), message));
+            } catch (NoSuchMessageException ex) {
+                log.error(ex.getMessage(), e);
+                return JSON.toJSONString(new Result(70000, ex.getMessage()));
             }
-            if (!StringUtils.isEmpty(((ZxbException) e).getFieldName())) {
-                message = ((ZxbException) e).getFieldName() + message;
-            }
-            log.info(message);
-            return JSON.toJSONString(Result.buildSuccess(message));
         } else {
             // 全局错误处理
             log.error(e.getMessage(), e);
-            return JSON.toJSONString(Result.buildFail("未知错误:" + e.getMessage()));
+            return JSON.toJSONString(new Result(99999, "未知错误"));
         }
     }
 

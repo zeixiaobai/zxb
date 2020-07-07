@@ -30,12 +30,4 @@ public class Result extends BaseDTO {
         return new Result(200, message);
     }
 
-    /**
-     * @description 返回失败实体
-     * @author zjx
-     * @date 2020/1/13
-     */
-    public static Result buildFail(String message) {
-        return new Result(0, message);
-    }
 }

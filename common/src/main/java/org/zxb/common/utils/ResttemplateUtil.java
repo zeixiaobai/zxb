@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @description: TODO
+ * @description: rest 封装工具类
  * @author: zjx
  * @time: 2020/1/8 21:42
  */
 public class ResttemplateUtil {
 
-    private static RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
