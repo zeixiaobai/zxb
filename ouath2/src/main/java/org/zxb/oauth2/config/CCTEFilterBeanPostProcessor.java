@@ -1,11 +1,11 @@
-package org.zxb.ouath2.config;
+package org.zxb.oauth2.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter;
 import org.springframework.stereotype.Component;
-import org.zxb.ouath2.handler.AuthFailHandler;
-import org.zxb.ouath2.handler.AuthSuccessHandler;
+import org.zxb.oauth2.handler.AuthFailHandler;
+import org.zxb.oauth2.handler.AuthSuccessHandler;
 
 /**
  * @description /oauth/token 认证失败返回处理

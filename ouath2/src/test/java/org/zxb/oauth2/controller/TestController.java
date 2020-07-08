@@ -1,7 +1,8 @@
-package org.zxb.ouath2.controller;
+package org.zxb.oauth2.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.zxb.web.annotation.ZxbLog;
 
 /**
  * @description: TODO
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @time: 2020/1/12 10:15
  */
 @RestController
+@ZxbLog
 public class TestController {
 
     @GetMapping("/hello")

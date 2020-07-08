@@ -1,4 +1,4 @@
-package org.zxb.ouath2.config;
+package org.zxb.oauth2.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +52,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenServices.setSupportRefreshToken(false);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(10)); //分钟
+        // 分钟
+        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(10));
         endpoints.tokenServices(tokenServices);
-        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
+        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
 //    @Bean

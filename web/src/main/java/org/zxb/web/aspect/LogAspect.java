@@ -54,12 +54,7 @@ public class LogAspect {
             // 执行方法
             result = point.proceed();
             // 响应参数
-            String argLog = result.toString();
-            if (argLog.length() > LOG_MAX_LENGTH) {
-                LoggerUtil.info(log, argLog.substring(0, LOG_MAX_LENGTH));
-            } else {
-                LoggerUtil.info(log, argLog);
-            }
+            pringLog(result, method.getName(), className);
         } catch (Exception e) {
             throw e;
         }

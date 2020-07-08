@@ -20,5 +20,8 @@ public class ErrorConstant {
      * 未知异常
      */
     public final static String UNKNOWN_ERROR = "ZXB0009999";
-
+    /**
+     * 鉴权失败
+     */
+    public final static String AUTH_ERROR = "ZXB0001000";
 }

@@ -8,7 +8,7 @@
  * 版权所有，侵权必究！
  */
 
-package org.zxb.ouath2.config;
+package org.zxb.oauth2.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

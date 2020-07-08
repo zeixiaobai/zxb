@@ -1,4 +1,4 @@
-package org.zxb.ouath2.service;
+package org.zxb.oauth2.service;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

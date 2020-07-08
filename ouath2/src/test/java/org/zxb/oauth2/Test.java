@@ -1,15 +1,9 @@
-package org.zxb.ouath2;
+package org.zxb.oauth2;
 
 import org.springframework.http.*;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @description: TODO
@@ -34,9 +28,9 @@ public class Test {
     public static void get(){
         RestTemplate r = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, "bearer cdb5fb86-13f2-4cad-854c-eab03851869a");
+//        headers.add(HttpHeaders.AUTHORIZATION, "bearer e714220f-a5f9-40a5-bef4-de2aeb91168b");
         HttpEntity<String> entity = new HttpEntity<>("{\"username\":\"1233123\"}", headers);
-        ResponseEntity<String> resp = r.exchange("http://localhost:8080/login", HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> resp = r.exchange("http://localhost:8080/hello?access_token=e714220f-a5f9-40a5-bef4-de2aeb91168b", HttpMethod.GET, entity, String.class);
         System.out.println(resp.getBody());
         //Basic Y2xpZW50SWQ6c2VjcmV0
     }
