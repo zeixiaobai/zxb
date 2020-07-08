@@ -9,15 +9,15 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.zxb.web.aspect.LogAspect;
 
 /**
- * @description: zxb自动注入
+ * 自动注入
+ *
  * @author: zjx
  * @time: 2020/1/2 21:55
  */
-@Configuration
 @Import(Swagger2Config.class)
 public class ZXBAutoConfig {
 
-    @Value(value = "${spring.messages.basename:i18n/validate,i18n/error}")
+    @Value(value = "${spring.messages.basename:i18n/validate,i18n/message}")
     private String basename;
 
     @Bean(name = "messageSource")
