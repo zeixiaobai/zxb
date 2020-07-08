@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.zxb.oauth2.handler.MyDefaultWebResponseExceptionTranslator;
 
 @Configuration
 @EnableResourceServer
@@ -29,7 +29,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         // 定义异常转换类生效
-//        resources.authenticationEntryPoint(new AuthExceptionEntryPoint());
         OAuth2AuthenticationEntryPoint authenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
         authenticationEntryPoint.setExceptionTranslator(new MyDefaultWebResponseExceptionTranslator());
         resources.authenticationEntryPoint(authenticationEntryPoint);
@@ -59,8 +58,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").authenticated();//配置所有访问控制，必须认证过后才可以访问
-        // @formatter:on
+                //配置所有访问控制，必须认证过后才可以访问
+                .antMatchers("/**").authenticated();
     }
 
 

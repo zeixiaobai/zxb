@@ -1,4 +1,4 @@
-package org.zxb.oauth2.config;
+package org.zxb.oauth2.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.provider.error.WebResponseExceptionTr
 import org.springframework.stereotype.Component;
 import org.zxb.common.dto.Result;
 import org.zxb.common.utils.LoggerUtil;
+import org.zxb.web.constant.ErrorConstant;
 
 /**
  * 自定义鉴权错误返回
@@ -23,7 +24,7 @@ public class MyDefaultWebResponseExceptionTranslator implements WebResponseExcep
         LoggerUtil.error(log, e);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Result.buildFail("10000", e.getMessage()));
+                .body(Result.buildFail(ErrorConstant.AUTH_ERROR, e.getMessage()));
     }
 
 }
