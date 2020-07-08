@@ -9,7 +9,7 @@ import org.zxb.common.exception.ZxbException;
  */
 public class BusinessException extends ZxbException {
 
-    public BusinessException(String messag) {
-        super(messag);
+    public BusinessException(String code, String messag) {
+        super(code, messag);
     }
 }

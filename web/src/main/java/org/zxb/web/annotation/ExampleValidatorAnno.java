@@ -9,9 +9,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 自定义校验示例
+ *
+ * @author zjx
+ * @date 2020-07-08 13:25:02
+ */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { ExampleValidator.class })
+@Constraint(validatedBy = {ExampleValidator.class})
 public @interface ExampleValidatorAnno {
 
     String message() default "{params.error}";

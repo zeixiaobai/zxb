@@ -1,6 +1,5 @@
 package org.zxb.web.aspect;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,8 +17,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
+ * 日志切面处理类
+ *
  * @author zjx
- * @description 日志切面处理类
  * @date 2019/12/24
  */
 @Aspect
@@ -46,11 +46,10 @@ public class LogAspect {
             Method method = signature.getMethod();
             // 请求的方法名
             String className = point.getTarget().getClass().getName();
-            // 请求的参数
+            // 请求的参数  （取第一个参数，如果请求参数大于一个用对象接收）
             Object[] args = point.getArgs();
-            if (args != null) {
-                args = filterArgs(args);
-                pringLog(args, method.getName(), className);
+            if (args != null && args.length > 0) {
+                pringLog(args[0], method.getName(), className);
             }
             // 执行方法
             result = point.proceed();
@@ -58,63 +57,46 @@ public class LogAspect {
             String argLog = result.toString();
             if (argLog.length() > LOG_MAX_LENGTH) {
                 LoggerUtil.info(log, argLog.substring(0, LOG_MAX_LENGTH));
-            }else{
+            } else {
                 LoggerUtil.info(log, argLog);
             }
         } catch (Exception e) {
             throw e;
         }
+
         return result;
     }
 
     /**
-     * @description 日志输出
+     * 日志输出
+     *
+     * @Param arg
+     * @Param methodName
+     * @Param className
      * @author zjx
+     * @date 2020/07/08 11:04
      */
-    private void pringLog(Object[] args, String methodName, String className) {
-        if (args == null) {
+    private void pringLog(Object arg, String methodName, String className) {
+        if (arg == null) {
             return;
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            String argLog = null;
-            if (args[i] != null) {
-                // 最大输出2000
-                argLog = args[i].toString();
-            } else {
-                argLog = "null";
-            }
-            if (argLog.length() > LOG_MAX_LENGTH) {
-                sb.append(className)
-                        .append(".")
-                        .append(methodName)
-                        .append(": ")
-                        .append(argLog.substring(0, LOG_MAX_LENGTH));
-            } else {
-                sb.append(className)
-                        .append(".")
-                        .append(methodName)
-                        .append(": ")
-                        .append(argLog);
-            }
-            LoggerUtil.info(log, sb.toString());
+        String argLog = arg.toString();
+        if (argLog.length() > LOG_MAX_LENGTH) {
+            sb.append(className)
+                    .append(".")
+                    .append(methodName)
+                    .append(": ")
+                    .append(argLog.substring(0, LOG_MAX_LENGTH));
+        } else {
+            sb.append(className)
+                    .append(".")
+                    .append(methodName)
+                    .append(": ")
+                    .append(argLog);
         }
+        LoggerUtil.info(log, sb.toString());
     }
 
-    /**
-     * @description 过滤参数
-     * @author zjx
-     */
-    private Object[] filterArgs(Object[] args) {
-        ArrayList<Object> list = new ArrayList<>();
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            if (arg instanceof ServletRequest || arg instanceof ServletResponse) {
-                continue;
-            }
-            list.add(arg);
-        }
-        return list.toArray();
-    }
 }
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.zxb.common.dto.Result;
 import org.zxb.common.exception.ZxbException;
+import org.zxb.common.utils.LoggerUtil;
+import org.zxb.web.constant.ErrorConstant;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
@@ -38,51 +40,30 @@ public class GlobalException {
     /**
      * 参数效验异常处理器
      *
-     * @param e 数验证异常
-     * @return org.zxb.common.dto.Result
+     * @return {@link Result}
+     * @Param e 参数验证异常
      * @author zjx
-     * @date 2020/7/7 23:29
+     * @date 2020/07/08 14:12
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result parameterExceptionHandler(MethodArgumentNotValidException e) {
-        log.error(e.getMessage(), e);
+        LoggerUtil.error(log, e);
         // 获取异常信息
-        BindingResult exceptions = e.getBindingResult();
-        // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
-        if (exceptions.hasErrors()) {
-            List<ObjectError> errors = exceptions.getAllErrors();
-            if (!errors.isEmpty()) {
-                // 这里列出了全部错误参数，按正常逻辑，只需要第一条错误即可
-                FieldError fieldError = (FieldError) errors.get(0);
-                return new Result(10000, fieldError.getDefaultMessage());
-            }
-        }
-        return new Result(10000, null);
+        return getResultByValidParam(e.getBindingResult());
     }
 
     /**
      * 参数效验异常处理器
      *
      * @param e 数验证异常
-     * @return org.zxb.common.dto.Result
+     * @return @link Result}
      * @author zjx
      * @date 2020/7/7 23:29
      */
     @ExceptionHandler(BindException.class)
     public Result parameterExceptionHandler(BindException e) {
-        log.error(e.getMessage(), e);
-        // 获取异常信息
-        BindingResult exceptions = e.getBindingResult();
-        // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
-        if (exceptions.hasErrors()) {
-            List<ObjectError> errors = exceptions.getAllErrors();
-            if (!errors.isEmpty()) {
-                // 这里列出了全部错误参数，按正常逻辑，只需要第一条错误即可
-                FieldError fieldError = (FieldError) errors.get(0);
-                return new Result(10000, fieldError.getDefaultMessage());
-            }
-        }
-        return new Result(10000, null);
+        LoggerUtil.error(log, e);
+        return getResultByValidParam(e.getBindingResult());
     }
 
     /**
@@ -95,15 +76,16 @@ public class GlobalException {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public Result parameterExceptionHandler(ConstraintViolationException e) {
-        log.error(e.getMessage(), e);
+        LoggerUtil.error(log, e);
         // 获取异常信息
         Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
         // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
         for (ConstraintViolation<?> constraintViolation : constraintViolations) {
-            String message = constraintViolation.getMessage();
-            return new Result(10000, message);
+            Object[] args = {constraintViolation.getMessage()};
+            String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
+            return Result.buildFail(ErrorConstant.PARAM_ERROR, message);
         }
-        return new Result(10000, null);
+        return Result.buildFail(ErrorConstant.PARAM_ERROR, null);
     }
 
     /**
@@ -116,16 +98,16 @@ public class GlobalException {
      */
     @ExceptionHandler({ZxbException.class})
     public Result paramExceptionHandler(ZxbException e) {
-        log.error(e.getMessage(), e);
+        LoggerUtil.error(log, e);
         // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
-        Locale locale = LocaleContextHolder.getLocale();
-        String code = ((ZxbException) e).getCode();
+        String code = e.getCode();
         try {
-            String message = messageSource.getMessage(code, null, locale);
-            return new Result(Integer.valueOf(code), message);
+            Object[] args = {e.getMessage()};
+            String message = messageSource.getMessage(e.getCode(), args, null);
+            return Result.buildFail(e.getCode(), message);
         } catch (NoSuchMessageException ex) {
             log.error(ex.getMessage(), ex);
-            return new Result(99999, ex.getMessage());
+            return Result.buildFail(e.getCode(), ex.getMessage());
         }
     }
 
@@ -139,9 +121,25 @@ public class GlobalException {
      */
     @ExceptionHandler({Exception.class})
     public Result otherExceptionHandler(Exception e) {
-        log.error(e.getMessage(), e);
-        return new Result(99999, e.getMessage());
+        LoggerUtil.error(log, e);
+        Object[] args = {e.getMessage()};
+        String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
+        return Result.buildFail(ErrorConstant.UNKNOWN_ERROR, message);
     }
 
 
+    private Result getResultByValidParam(BindingResult exceptions) {
+        // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
+        if (exceptions.hasErrors()) {
+            List<ObjectError> errors = exceptions.getAllErrors();
+            if (!errors.isEmpty()) {
+                // 这里列出了全部错误参数，按正常逻辑，只需要第一条错误即可
+                FieldError fieldError = (FieldError) errors.get(0);
+                Object[] args = {fieldError.getDefaultMessage()};
+                String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
+                return Result.buildFail(ErrorConstant.PARAM_ERROR, message);
+            }
+        }
+        return Result.buildFail(ErrorConstant.PARAM_ERROR, null);
+    }
 }

@@ -2,30 +2,23 @@ package org.zxb.web.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.util.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Swagger2配置类
+ *  Swagger2配置类 @EnableSwagger2： 启用Swagger2。
  *
- * @Configuration： 让Spring来加载该类配置。
- * @EnableSwagger2： 启用Swagger2。
+ * @author zjx
+ * @date 2020-07-08 13:29:59
  */
 @EnableSwagger2
-@Configuration
 @EnableConfigurationProperties(Swagger.class)
 public class Swagger2Config {
 
