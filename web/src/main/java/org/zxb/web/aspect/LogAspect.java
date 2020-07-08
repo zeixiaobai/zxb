@@ -49,12 +49,12 @@ public class LogAspect {
             // 请求的参数  （取第一个参数，如果请求参数大于一个用对象接收）
             Object[] args = point.getArgs();
             if (args != null && args.length > 0) {
-                pringLog(args[0], method.getName(), className);
+                pringLog(args[0], method.getName(), className, "request params");
             }
             // 执行方法
             result = point.proceed();
             // 响应参数
-            pringLog(result, method.getName(), className);
+            pringLog(result, method.getName(), className, "response params");
         } catch (Exception e) {
             throw e;
         }
@@ -71,7 +71,7 @@ public class LogAspect {
      * @author zjx
      * @date 2020/07/08 11:04
      */
-    private void pringLog(Object arg, String methodName, String className) {
+    private void pringLog(Object arg, String methodName, String className, String type) {
         if (arg == null) {
             return;
         }
@@ -90,7 +90,7 @@ public class LogAspect {
                     .append(": ")
                     .append(argLog);
         }
-        LoggerUtil.info(log, sb.toString());
+        LoggerUtil.info(log, type + ":{}", sb.toString());
     }
 
 }

@@ -11,10 +11,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,6 +31,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private WebResponseExceptionTranslator myWebResponseExceptionTranslator;
+
 //    @Autowired
 //    private DataSource dataSource;
 
@@ -41,6 +46,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         // jdbc token
         // return new JdbcTokenStore(dataSource);
     }
+
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -56,6 +62,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.MINUTES.toSeconds(10));
         endpoints.tokenServices(tokenServices);
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+        endpoints.exceptionTranslator(myWebResponseExceptionTranslator);
     }
 
 //    @Bean

@@ -15,13 +15,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-//    @Autowired
+    //    @Autowired
 //    private LoginAuthenticationFilter loginAuthenticationFilter;
+
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        // 定义异常转换类生效
+//        resources.authenticationEntryPoint(new AuthExceptionEntryPoint());
+        OAuth2AuthenticationEntryPoint authenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
+        authenticationEntryPoint.setExceptionTranslator(new MyDefaultWebResponseExceptionTranslator());
+        resources.authenticationEntryPoint(authenticationEntryPoint);
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -43,7 +55,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/v2/api-docs",
                         "/swagger-ui.html",
                         "/ouath/check_token",
-                        "/swagger-resources/**" )
+                        "/swagger-resources/**")
                 .permitAll()
                 .and()
                 .authorizeRequests()
