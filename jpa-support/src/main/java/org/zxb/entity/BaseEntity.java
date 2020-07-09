@@ -13,10 +13,10 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer id;
 
-    @Column(name="craete_by")
-    public String craeteBy;
+    @Column(name="create_by")
+    public String createBy;
 
-    @Column(name="craete_time")
+    @Column(name="create_time")
     public Date createTime;
 
     @Column(name="update_by")
