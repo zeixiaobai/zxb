@@ -1,9 +1,6 @@
 package org.zxb.common.utils;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -13,17 +10,21 @@ import org.springframework.web.client.RestTemplate;
  */
 public class ResttemplateUtil {
 
-    private RestTemplate restTemplate;
-
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public void post() {
+    /**
+     * post 请求
+     *
+     * @param url
+     * @param body
+     * @return {@link String}
+     * @author zjx
+     * @date 2020/10/16 17:28
+     */
+    public static String post(String url, Object body) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.ACCEPT, "");
-        HttpEntity httpEntity = new HttpEntity("", httpHeaders);
-        ResponseEntity<String> resp = restTemplate.exchange("", HttpMethod.POST, null, String.class);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity httpEntity = new HttpEntity(body, httpHeaders);
+        ResponseEntity<String> re = SpringContextHolder.getBean(RestTemplate.class).exchange(url, HttpMethod.POST, httpEntity, String.class);
+        return re.getBody();
     }
 
 }

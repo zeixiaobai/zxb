@@ -1,11 +1,7 @@
 package org.zxb.common;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.client.RestTemplate;
-import org.zxb.common.utils.ResttemplateUtil;
 import org.zxb.common.utils.SpringContextHolder;
 
 /**
@@ -16,12 +12,5 @@ import org.zxb.common.utils.SpringContextHolder;
 @ConditionalOnProperty(prefix = "org.zxb.common.enble", matchIfMissing = true)
 @Import(SpringContextHolder.class)
 public class CommonAutoConfig {
-
-    @Bean
-    public RestTemplate getRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        new ResttemplateUtil().setRestTemplate(restTemplate);
-        return restTemplate;
-    }
 
 }

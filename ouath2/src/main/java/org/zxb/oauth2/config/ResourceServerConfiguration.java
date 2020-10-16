@@ -23,9 +23,6 @@ import org.zxb.oauth2.handler.MyDefaultWebResponseExceptionTranslator;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    //    @Autowired
-//    private LoginAuthenticationFilter loginAuthenticationFilter;
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         // 定义异常转换类生效
@@ -36,7 +33,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
         http
 //                .addFilterBefore(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // Since we want the protected resources to be accessible in the UI as well we need
@@ -53,7 +49,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/swagger/**",
                         "/v2/api-docs",
                         "/swagger-ui.html",
-                        "/ouath/check_token",
+//                        "/oauth/check_token",
                         "/swagger-resources/**")
                 .permitAll()
                 .and()

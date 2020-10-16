@@ -20,6 +20,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 
 /**
  * http://localhost:8080/oauth/token?client_id=clientId&client_secret=secret&grant_type=password&username=zhangsan&password=123456
@@ -32,6 +34,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+       /* OAuth2AuthenticationManager authenticationManager = (OAuth2AuthenticationManager)super.authenticationManagerBean();
+        RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
+        remoteTokenServices.setCheckTokenEndpointUrl("http://localhost:8080/oauth/check_token");
+        remoteTokenServices.setClientId("clientId");
+        remoteTokenServices.setClientSecret("secret");
+        authenticationManager.setTokenServices(remoteTokenServices);*/
+
+//        return authenticationManager;
         return super.authenticationManagerBean();
     }
 

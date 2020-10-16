@@ -17,20 +17,20 @@ import org.zxb.web.aspect.LogAspect;
 @Import(Swagger2Config.class)
 public class ZXBAutoConfig {
 
-    @Value(value = "${spring.messages.basename:i18n/validate,i18n/message}")
+    @Value(value = "${spring.messages.basename:i18n/message}")
     private String basename;
 
     @Bean(name = "messageSource")
     public ResourceBundleMessageSource getMessageResource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setDefaultEncoding("UTF-8");
+        basename = basename + ",i18/zxb";
         String[] bns = basename.split(",");
         messageSource.addBasenames(bns);
         return messageSource;
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public GlobalException getGlobalExeception() {
         return new GlobalException();
     }

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class LogAspect {
 
     /* 日志最大长度 */
-    private static final int LOG_MAX_LENGTH = 5000;
+    private static final int LOG_MAX_LENGTH = 2000;
 
     @Autowired
     private Validator validator;
@@ -49,12 +49,12 @@ public class LogAspect {
             // 请求的参数  （取第一个参数，如果请求参数大于一个用对象接收）
             Object[] args = point.getArgs();
             if (args != null && args.length > 0) {
-                pringLog(args[0], method.getName(), className, "request params");
+                pringLog(args[0], method.getName(), className, "请求参数：");
             }
             // 执行方法
             result = point.proceed();
             // 响应参数
-            pringLog(result, method.getName(), className, "response params");
+            pringLog(result, method.getName(), className, "响应参数：");
         } catch (Exception e) {
             throw e;
         }

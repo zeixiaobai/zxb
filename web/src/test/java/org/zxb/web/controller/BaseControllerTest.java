@@ -10,11 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.zxb.common.dto.Result;
 import org.zxb.common.utils.JSONUtil;
 import org.zxb.web.bean.User;
-
-import java.lang.reflect.Type;
+import org.zxb.web.vo.Result;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

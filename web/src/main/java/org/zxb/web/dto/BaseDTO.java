@@ -1,4 +1,4 @@
-package org.zxb.common.dto;
+package org.zxb.web.dto;
 
 import java.io.Serializable;
 

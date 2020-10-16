@@ -1,4 +1,4 @@
-package org.zxb.common.vo;
+package org.zxb.web.vo;
 
 import java.io.Serializable;
 
@@ -7,5 +7,5 @@ import java.io.Serializable;
  * @description 基础参数体
  * @date 2020/1/13
  */
-public abstract class BaseVo implements Serializable {
+public abstract class BaseVO implements Serializable {
 }

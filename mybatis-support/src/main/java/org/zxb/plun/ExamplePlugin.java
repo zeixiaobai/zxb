@@ -28,7 +28,7 @@ public class ExamplePlugin implements Interceptor {
     private ThreadLocal threadLocal = new ThreadLocal();
 
     private Properties properties = new Properties();
-
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
         // 取出被拦截的对象
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
@@ -57,7 +57,7 @@ public class ExamplePlugin implements Interceptor {
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
-
+    @Override
     public void setProperties(Properties properties) {
         this.properties = properties;
     }

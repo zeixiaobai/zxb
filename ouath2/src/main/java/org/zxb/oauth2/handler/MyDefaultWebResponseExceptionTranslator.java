@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.stereotype.Component;
-import org.zxb.common.dto.Result;
 import org.zxb.common.utils.LoggerUtil;
 import org.zxb.web.constant.ErrorConstant;
+import org.zxb.web.vo.Result;
 
 /**
  * 自定义鉴权错误返回

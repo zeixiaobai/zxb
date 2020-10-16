@@ -11,10 +11,10 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.zxb.common.dto.Result;
-import org.zxb.common.exception.ZxbException;
+import org.zxb.common.exception.CommonException;
 import org.zxb.common.utils.LoggerUtil;
 import org.zxb.web.constant.ErrorConstant;
+import org.zxb.web.vo.Result;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
@@ -93,8 +93,8 @@ public class GlobalException {
      * @author zjx
      * @date 2020/7/7 23:29
      */
-    @ExceptionHandler({ZxbException.class})
-    public Result paramExceptionHandler(ZxbException e) {
+    @ExceptionHandler({CommonException.class})
+    public Result paramExceptionHandler(CommonException e) {
         LoggerUtil.error(log, e);
         // 判断异常中是否有错误信息，如果存在就使用异常中的消息，否则使用默认消息
         String code = e.getCode();
@@ -120,7 +120,7 @@ public class GlobalException {
     public Result otherExceptionHandler(Exception e) {
         LoggerUtil.error(log, e);
         Object[] args = {e.getMessage()};
-        String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
+        String message = messageSource.getMessage(ErrorConstant.UNKNOWN_ERROR, args, null);
         return Result.buildFail(ErrorConstant.UNKNOWN_ERROR, message);
     }
 

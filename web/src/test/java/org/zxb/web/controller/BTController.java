@@ -4,9 +4,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.zxb.common.dto.Result;
 import org.zxb.web.annotation.ZxbLog;
 import org.zxb.web.bean.User;
+import org.zxb.web.vo.Result;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

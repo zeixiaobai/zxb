@@ -2,9 +2,9 @@ package org.zxb.common.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.zxb.common.exception.CommonException;
 
 /**
  * jackjson util
@@ -14,17 +14,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class JSONUtil {
-
-    private static ObjectMapper om;
-
-    /**
-     * 初始化 ObjectMapper
-     */
-    static {
-        om = new ObjectMapper();
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
 
     private JSONUtil() {
     }
@@ -39,10 +28,10 @@ public class JSONUtil {
      */
     public static String toJSONString(Object obj) {
         try {
-            return om.writeValueAsString(obj);
+            return SpringContextHolder.getBean(ObjectMapper.class).writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             LoggerUtil.error(log, e);
-            return null;
+            throw new CommonException(e);
         }
     }
 
@@ -57,10 +46,10 @@ public class JSONUtil {
      */
     public static <T> T parseObject(String str, Class<T> clz) {
         try {
-            return om.readValue(str, clz);
+            return SpringContextHolder.getBean(ObjectMapper.class).readValue(str, clz);
         } catch (Exception e) {
             LoggerUtil.error(log, e);
-            return null;
+            throw new CommonException(e);
         }
     }
 
@@ -75,10 +64,10 @@ public class JSONUtil {
      */
     public static <T> T parseObject(String str, TypeReference<T> valueTypeRef) {
         try {
-            return om.readValue(str, valueTypeRef);
+            return SpringContextHolder.getBean(ObjectMapper.class).readValue(str, valueTypeRef);
         } catch (Exception e) {
             LoggerUtil.error(log, e);
-            return null;
+            throw new CommonException(e);
         }
     }
 

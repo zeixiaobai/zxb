@@ -1,7 +1,9 @@
-package org.zxb.common.dto;
+package org.zxb.web.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.zxb.web.constant.ResponseConstant;
+import org.zxb.web.dto.BaseDTO;
 
 /**
  * 统一返回结构体
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class Result<T> extends BaseDTO {
+public class Result<T> extends BaseVO {
 
     private String code;
 
@@ -36,7 +38,7 @@ public class Result<T> extends BaseDTO {
      * @date 2020/1/13
      */
     public static Result buildSuccess(Object data) {
-        return new Result("200", "success", data);
+        return new Result(ResponseConstant.CODE, ResponseConstant.MESSAGE, data);
     }
 
     /**
