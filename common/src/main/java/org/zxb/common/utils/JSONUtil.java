@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.zxb.common.exception.CommonException;
+import org.zxb.common.exception.JSONException;
 
 /**
  * jackjson util
@@ -31,7 +31,7 @@ public class JSONUtil {
             return SpringContextHolder.getBean(ObjectMapper.class).writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             LoggerUtil.error(log, e);
-            throw new CommonException(e);
+            throw new JSONException(e);
         }
     }
 
@@ -49,7 +49,7 @@ public class JSONUtil {
             return SpringContextHolder.getBean(ObjectMapper.class).readValue(str, clz);
         } catch (Exception e) {
             LoggerUtil.error(log, e);
-            throw new CommonException(e);
+            throw new JSONException(e);
         }
     }
 
@@ -67,7 +67,7 @@ public class JSONUtil {
             return SpringContextHolder.getBean(ObjectMapper.class).readValue(str, valueTypeRef);
         } catch (Exception e) {
             LoggerUtil.error(log, e);
-            throw new CommonException(e);
+            throw new JSONException(e);
         }
     }
 

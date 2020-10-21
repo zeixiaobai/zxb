@@ -3,6 +3,7 @@ package org.zxb;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +19,12 @@ public class RedisTest {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Value("${test.a}")
+    private String testa;
+
+    @Value("${test.b}")
+    private String testb;
+
     /**
      * 插入缓存数据
      */
@@ -31,7 +38,7 @@ public class RedisTest {
      */
     @Test
     public void setTimeout() {
-        redisTemplate.opsForValue().set("name-timeout", "haha",1, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("name-timeout", "haha", 1, TimeUnit.MINUTES);
     }
 
     /**
@@ -39,8 +46,14 @@ public class RedisTest {
      */
     @Test
     public void get() {
-       String object = redisTemplate.opsForValue().get("name");
+        String object = redisTemplate.opsForValue().get("name");
         System.out.println(object);
+    }
+
+    @Test
+    public void testa() {
+        System.out.println(testa);
+        System.out.println(testb);
     }
 
 }

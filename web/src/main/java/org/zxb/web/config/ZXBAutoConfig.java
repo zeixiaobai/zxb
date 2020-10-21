@@ -36,7 +36,6 @@ public class ZXBAutoConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public LogAspect getLogAspect() {
         return new LogAspect();
     }

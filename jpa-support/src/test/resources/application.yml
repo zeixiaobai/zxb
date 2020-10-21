@@ -27,5 +27,3 @@ spring:
   jackson:
     serialization:
       indent_output: false
-
-test: 111

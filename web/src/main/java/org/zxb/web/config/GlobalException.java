@@ -11,9 +11,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.zxb.common.exception.CommonException;
 import org.zxb.common.utils.LoggerUtil;
 import org.zxb.web.constant.ErrorConstant;
+import org.zxb.web.exception.CommonException;
 import org.zxb.web.vo.Result;
 
 import javax.annotation.Resource;
@@ -35,7 +35,7 @@ public class GlobalException {
     private MessageSource messageSource;
 
     /**
-     * 参数效验异常处理器
+     * 参数校验异常
      *
      * @return {@link Result}
      * @Param e 参数验证异常
@@ -50,7 +50,7 @@ public class GlobalException {
     }
 
     /**
-     * 参数效验异常处理器
+     * 参数校验异常
      *
      * @param e 数验证异常
      * @return @link Result}
@@ -64,9 +64,9 @@ public class GlobalException {
     }
 
     /**
-     * 参数效验异常处理器
+     * 参数校验异常
      *
-     * @param e 数验证异常
+     * @param e 参数验证异常
      * @return org.zxb.common.dto.Result
      * @author zjx
      * @date 2020/7/7 23:29
@@ -109,7 +109,7 @@ public class GlobalException {
     }
 
     /**
-     * 其他异常
+     * 系统异常
      *
      * @param e 自定义异常
      * @return org.zxb.common.dto.Result
@@ -120,8 +120,8 @@ public class GlobalException {
     public Result otherExceptionHandler(Exception e) {
         LoggerUtil.error(log, e);
         Object[] args = {e.getMessage()};
-        String message = messageSource.getMessage(ErrorConstant.UNKNOWN_ERROR, args, null);
-        return Result.buildFail(ErrorConstant.UNKNOWN_ERROR, message);
+        String message = messageSource.getMessage(ErrorConstant.SYS_ERROR, args, null);
+        return Result.buildFail(ErrorConstant.SYS_ERROR, message);
     }
 
 

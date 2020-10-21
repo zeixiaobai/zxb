@@ -24,7 +24,7 @@ public class MyDefaultWebResponseExceptionTranslator implements WebResponseExcep
         LoggerUtil.error(log, e);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Result.buildFail(ErrorConstant.AUTH_ERROR, e.getMessage()));
+                .body(Result.buildFail("1000", e.getMessage()));
     }
 
 }

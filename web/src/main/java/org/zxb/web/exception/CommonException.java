@@ -1,9 +1,12 @@
-package org.zxb.common.exception;
+package org.zxb.web.exception;
 
 /**
+ *  通用异常
+ *  此类错误会被全局异常类处理，code需要在信息资源存在
+ * {@link org.zxb.web.config.GlobalException}
+ *
  * @author zjx
- * @description 通用异常
- * @date 2020/1/13
+ * @date 2020-10-21 10:51:32
  */
 public class CommonException extends RuntimeException {
 

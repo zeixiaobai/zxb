@@ -23,14 +23,14 @@
     </properties>
 
     <modules>
-        <module>web</module>
-        <module>common</module>
-        <module>jpa-support</module>
-        <module>mybatis-support</module>
-        <module>redis-support</module>
-        <module>rocketmq-support</module>
-        <module>ouath2</module>
-    </modules>
+    <module>web</module>
+    <module>common</module>
+    <module>jpa-support</module>
+    <module>mybatis-support</module>
+    <module>redis-support</module>
+    <module>rocketmq-support</module>
+    <module>ouath2</module>
+</modules>
 
     <build>
         <finalName>${project.name}</finalName>
