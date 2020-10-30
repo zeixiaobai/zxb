@@ -1,10 +1,10 @@
 # spring连接数据库驱动
 spring:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://119.23.219.141:3306/template?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zxb_template?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&verifyServerCertificate=false&useSSL=false
     username: root
-    password: Zjx1991#
+    password: 123456
     # Hikari will use the above plus the following to setup connection pooling
     hikari:
       minimum-idle: 5
@@ -16,7 +16,7 @@ spring:
       connection-timeout: 10000
       connection-test-query: SELECT 1
 mybatis:
-  mapper-locations: classpath:mapper/*Mapper.xml
+  mapper-locations: classpath:mapper/*Dao.xml,classpath:mapper/generator/*Mapper.xml
 
 logging:
   level:

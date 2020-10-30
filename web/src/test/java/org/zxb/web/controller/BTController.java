@@ -24,7 +24,6 @@ public class BTController  {
 
     @GetMapping("get")
     public Result get(@NotNull(message = "id不能为空") String id) {
-        System.out.println(id);
         return Result.buildSuccess(id);
     }
 

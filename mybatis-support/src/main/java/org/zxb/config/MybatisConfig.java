@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.zxb.plun.ExamplePlugin;
 
 /**
- * @description: mytasi配置
+ * @description: mybatis配置
  * @author: zjx
  * @time: 2020/1/6 19:54
  */

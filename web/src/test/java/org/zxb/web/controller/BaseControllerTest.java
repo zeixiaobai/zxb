@@ -29,7 +29,6 @@ public class BaseControllerTest {
     public void testGet() throws Exception {
         String response = this.mvc.perform(get("/test/get?id=123").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        System.out.println(response);
         Result<String> result = JSONUtil.parseObject(response, new TypeReference<Result<String>>() {
         });
         Assert.assertEquals("123",result.getData());

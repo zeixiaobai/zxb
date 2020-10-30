@@ -28,6 +28,9 @@ public class JSONUtil {
      */
     public static String toJSONString(Object obj) {
         try {
+            if(obj instanceof String){
+                return (String) obj;
+            }
             return SpringContextHolder.getBean(ObjectMapper.class).writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             LoggerUtil.error(log, e);

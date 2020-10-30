@@ -1,15 +1,18 @@
 package org.zxb.plun;
 
 import org.mybatis.generator.api.GeneratedXmlFile;
-import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.XmlConstants;
 
-import java.util.LinkedList;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,316 +21,134 @@ import java.util.List;
  * @time: 2020/1/10 21:11
  */
 public class SqlMapperPlugin extends PluginAdapter {
+    private String template = ".generator";
+    private String fileTitle = "《扩展XML操作，由Mybatis Generator插件自动生成，多次生成，不会覆盖》";
+    private String mgfileTitle = "《由Mybatis Generator插件自动生成，多次生成，会覆盖，不要手动增加sql》";
 
     @Override
     public boolean validate(List<String> list) {
         return true;
     }
 
+    /**
+     * 开启xml覆盖
+     *
+     * @param sqlMap
+     * @param introspectedTable
+     * @return {@link boolean}
+     * @author zjx
+     * @date 2020/10/30 14:13
+     */
+    @Override
+    public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
 
-    private static String LINE = "\n";
-    private static String ALIAS = "obj";
-    private static String ALIAS_WHERE = "whe";
-    private static String SET_FIELFD = "Set_Sql_Filed";
-    private static String SET_FIELFD_AND_VALUE = "Set_Sql_Filed_Value";
-    private static String SET_SQL_VALUE = "Set_Sql_Value";
-    private static String WHERE_SQL = "Where_Sql";
-    private static String SELECT = "select";
-    private static String INSERT = "insert";
-    private static String DELETE = "delete";
-    private static String UPDATE = "update";
+        try {
+            java.lang.reflect.Field field = sqlMap.getClass().getDeclaredField("isMergeable");
+            field.setAccessible(true);
+            field.setBoolean(sqlMap, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
-
+    /**
+     * 修改生成的自动生成xml的namespace
+     *
+     * @param document
+     * @param introspectedTable
+     * @return {@link boolean}
+     * @author zjx
+     * @date 2020/10/30 15:12
+     */
     @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
-        setSqlField(document, introspectedTable, 2);
-        setSqlFieldValue(document, introspectedTable, 3);
-        setSqlValue(document, introspectedTable, 4);
-        where(document, introspectedTable, 5);
-        select(document, introspectedTable, 6);
-        insert(document, introspectedTable, 7);
-        delete(document, introspectedTable, 8);
-        update(document, introspectedTable, 9);
-        return true;
-    }
 
-    private void setSqlField(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSql = new XmlElement("sql");
-        selectiveSql.addAttribute(new Attribute("id", SET_FIELFD));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        for (IntrospectedColumn allColumn : allColumns) {
-            sb.append("<if test=\"");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(" != null\" >");
-            sb.append(allColumn.getActualColumnName());
-            sb.append(",</if>");
-            sb.append(LINE);
+        String daoBaseName = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Dao";
+        String targetJavaPackage = context.getJavaClientGeneratorConfiguration().getTargetPackage();
+        // 判断是否.generator结尾
+        if (targetJavaPackage.indexOf(template) == -1) {
+            return true;
         }
-        selectiveSql.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSql);
+        targetJavaPackage = targetJavaPackage.substring(0, targetJavaPackage.indexOf(template));
+
+        document.getRootElement().getAttributes().remove(0);
+        document.getRootElement().getAttributes().add(new Attribute("namespace", targetJavaPackage + "." + daoBaseName));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!-- ")
+                .append("\r\n")
+                .append("  " )
+                .append(mgfileTitle)
+                .append("\r\n")
+                .append("  generator date：");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        sb.append(dateFormatter.format(new Date()));
+        sb.append('.').append("\r\n").append("  -->");
+        document.getRootElement().addElement(0, new TextElement(sb.toString()));
+
+
+        return super.sqlMapDocumentGenerated(document, introspectedTable);
     }
 
-    private void setSqlFieldValue(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("sql");
-        selectiveSqlValue.addAttribute(new Attribute("id", SET_FIELFD_AND_VALUE));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        for (IntrospectedColumn allColumn : allColumns) {
-            sb.append("<if test=\"");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(" != null\" >#{");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(",jdbcType=");
-            sb.append(allColumn.getJdbcTypeName());
-            sb.append("},</if>");
-            sb.append(LINE);
+    @Override
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
+        String daoBaseName = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "Dao";
+        String targetPackage = context.getSqlMapGeneratorConfiguration().getTargetPackage();
+        String targetJavaPackage = context.getJavaClientGeneratorConfiguration().getTargetPackage();
+        String targetProject = context.getSqlMapGeneratorConfiguration().getTargetProject();
+
+        // 判断是否.generator结尾
+        if (targetPackage.indexOf(template) == -1 && targetJavaPackage.indexOf(template) == -1) {
+            return null;
         }
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
+        targetPackage = targetPackage.substring(0, targetPackage.indexOf(template));
+        targetJavaPackage = targetJavaPackage.substring(0, targetJavaPackage.indexOf(template));
 
-    private void setSqlValue(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("sql");
-        selectiveSqlValue.addAttribute(new Attribute("id", SET_SQL_VALUE));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        for (IntrospectedColumn allColumn : allColumns) {
-            sb.append("<if test=\"");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(" != null\" >");
-            sb.append(allColumn.getActualColumnName());
-            sb.append(" = #{");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(",jdbcType=");
-            sb.append(allColumn.getJdbcTypeName());
-            sb.append("}</if>");
-            sb.append(LINE);
+        String targetPackagePath = targetPackage.replaceAll("\\.", "/");
+        StringBuilder filePath = new StringBuilder();
+        filePath.append(targetProject)
+                .append(File.separator)
+                .append(targetPackagePath)
+                .append(File.separator)
+                .append(daoBaseName)
+                .append(".xml");
+        if (new File(filePath.toString()).exists()) {
+            System.out.println(filePath + "文件存在，不生成");
+            return null;
         }
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
+
+        String domainType = introspectedTable.getBaseRecordType();
+        Document document = new Document(
+                XmlConstants.MYBATIS3_MAPPER_CONFIG_PUBLIC_ID,
+                XmlConstants.MYBATIS3_MAPPER_SYSTEM_ID);
+        XmlElement root = new XmlElement("mapper");
+        document.setRootElement(root);
+        root.addAttribute(new Attribute("namespace", targetJavaPackage + "." + daoBaseName));
+        root.addElement(new TextElement("<!--"));
+        root.addElement(new TextElement("  " + fileTitle));
+        root.addElement(new TextElement(
+                "  这是一个继承自父xxxMapper.xml的配置文件，扩展的sql语句操作都放在这个文件"));
+        root.addElement(new TextElement(
+                "  注意：不要使用与父mapper相同的statement"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("  generator date：");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        sb.append(dateFormatter.format(new Date()));
+        sb.append('.');
+        root.addElement(new TextElement(sb.toString()));
+        root.addElement(new TextElement("-->"));
+
+        GeneratedXmlFile gxf = new GeneratedXmlFile(document,
+                daoBaseName + ".xml",
+                targetPackage,
+                targetProject,
+                false, context.getXmlFormatter());
+
+        List<GeneratedXmlFile> list = new ArrayList<>(1);
+        list.add(gxf);
+
+        return list;
     }
 
-    private void where(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("sql");
-        selectiveSqlValue.addAttribute(new Attribute("id", WHERE_SQL));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        sb.append("<choose> <when test=\"_parameter.containsKey('whe')\"> ");
-        sb.append(LINE);
-        for (IntrospectedColumn allColumn : allColumns) {
-            sb.append("<if test=\"");
-            sb.append(ALIAS_WHERE);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(" != null\" > AND ");
-            sb.append(allColumn.getActualColumnName());
-            sb.append(" = #{");
-            sb.append(ALIAS_WHERE);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(",jdbcType=");
-            sb.append(allColumn.getJdbcTypeName());
-            sb.append("}</if>");
-            sb.append(LINE);
-        }
-        sb.append(" </when>");
-        sb.append(LINE);
-        sb.append("<otherwise>");
-        sb.append(LINE);
-        sb.append("<if test=\""+ALIAS+" != null \">");
-        for (IntrospectedColumn allColumn : allColumns) {
-            sb.append("<if test=\"");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(" != null\" > AND ");
-            sb.append(allColumn.getActualColumnName());
-            sb.append(" = #{");
-            sb.append(ALIAS);
-            sb.append(".");
-            sb.append(allColumn.getJavaProperty());
-            sb.append(",jdbcType=");
-            sb.append(allColumn.getJdbcTypeName());
-            sb.append("}</if>");
-            sb.append(LINE);
-        }
-        sb.append("</if>");
-        sb.append(" </otherwise> </choose>");
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
-
-    private void select(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("select");
-        selectiveSqlValue.addAttribute(new Attribute("id", SELECT));
-        selectiveSqlValue.addAttribute(new Attribute("resultMap", "BaseResultMap"));
- //       selectiveSqlValue.addAttribute(new Attribute("parameterType", introspectedTable.getBaseRecordType()));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-
-        sb.append("select <include refid=\"Base_Column_List\" />  from ");
-        sb.append(introspectedTable.getTableConfiguration().getTableName());
-        sb.append(LINE);
-        sb.append("<where> <include refid=\""+WHERE_SQL+"\" /> </where>");
-
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
-
-    private void insert(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("insert");
-        selectiveSqlValue.addAttribute(new Attribute("id", INSERT));
-      //  selectiveSqlValue.addAttribute(new Attribute("parameterType", introspectedTable.getBaseRecordType()));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        sb.append("insert into ");
-        sb.append(introspectedTable.getTableConfiguration().getTableName());
-        sb.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
-        sb.append("<include refid=\""+SET_FIELFD+"\" />");
-        sb.append("</trim>");
-        sb.append(LINE);
-        sb.append("<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\">");
-        sb.append("<include refid=\""+SET_FIELFD_AND_VALUE+"\" />");
-        sb.append(" </trim>");
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
-
-    private void delete(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("insert");
-        selectiveSqlValue.addAttribute(new Attribute("id", DELETE));
-   //     selectiveSqlValue.addAttribute(new Attribute("parameterType", introspectedTable.getBaseRecordType()));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        sb.append("delete from ");
-        sb.append(introspectedTable.getTableConfiguration().getTableName());
-        sb.append("<where> <include refid=\""+WHERE_SQL+"\" /> </where>");
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
-
-    private void update(Document document, IntrospectedTable introspectedTable, int index) {
-        XmlElement rootElement = document.getRootElement();
-        XmlElement selectiveSqlValue = new XmlElement("update");
-        selectiveSqlValue.addAttribute(new Attribute("id", UPDATE));
-  //      selectiveSqlValue.addAttribute(new Attribute("parameterType", introspectedTable.getBaseRecordType()));
-        StringBuffer sb = new StringBuffer();
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        sb.append("update ");
-        sb.append(introspectedTable.getTableConfiguration().getTableName());
-        sb.append("<set>");
-        sb.append("<include refid=\""+SET_SQL_VALUE+"\" />");
-        sb.append("</set>");
-        sb.append("<where> <include refid=\""+WHERE_SQL+"\" /> </where>");
-        selectiveSqlValue.addElement(new TextElement(sb.toString()));
-        rootElement.addElement(index, selectiveSqlValue);
-    }
-
-    @Override
-    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
-
-    @Override
-    public boolean sqlMapBaseColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return true;
-    }
-
-    @Override
-    public boolean sqlMapBlobColumnListElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return true;
-    }
-
-    @Override
-    public boolean sqlMapSelectAllElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return true;
-    }
-
-    @Override
-    public boolean sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        return false;
-    }
 }

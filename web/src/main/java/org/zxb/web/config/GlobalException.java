@@ -2,8 +2,10 @@ package org.zxb.web.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -24,8 +26,8 @@ import java.util.Set;
 
 /**
  * @author zjx
- * @description 错误拦截切面
- * @date 2020/1/2 0002
+ * @description web异常全局处理器
+ * @date 2020/1/2
  */
 @Slf4j
 @RestControllerAdvice
@@ -33,6 +35,12 @@ public class GlobalException {
 
     @Resource(name = "messageSource")
     private MessageSource messageSource;
+
+    @Value("${zxb.web.global.param.error:}")
+    public String paramError;
+
+    @Value("${zxb.web.global.sys.error:}")
+    public String sysError;
 
     /**
      * 参数校验异常
@@ -80,9 +88,9 @@ public class GlobalException {
         for (ConstraintViolation<?> constraintViolation : constraintViolations) {
             Object[] args = {constraintViolation.getMessage()};
             String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
-            return Result.buildFail(ErrorConstant.PARAM_ERROR, message);
+            return buildParam(message);
         }
-        return Result.buildFail(ErrorConstant.PARAM_ERROR, null);
+        return buildParam(null);
     }
 
     /**
@@ -121,7 +129,7 @@ public class GlobalException {
         LoggerUtil.error(log, e);
         Object[] args = {e.getMessage()};
         String message = messageSource.getMessage(ErrorConstant.SYS_ERROR, args, null);
-        return Result.buildFail(ErrorConstant.SYS_ERROR, message);
+        return buildSys(message);
     }
 
 
@@ -134,9 +142,18 @@ public class GlobalException {
                 FieldError fieldError = (FieldError) errors.get(0);
                 Object[] args = {fieldError.getDefaultMessage()};
                 String message = messageSource.getMessage(ErrorConstant.PARAM_ERROR, args, null);
-                return Result.buildFail(ErrorConstant.PARAM_ERROR, message);
+                return buildParam(message);
             }
         }
-        return Result.buildFail(ErrorConstant.PARAM_ERROR, null);
+        return buildParam(null);
     }
+
+    private Result buildParam(String message){
+        return Result.buildFail( StringUtils.isEmpty(paramError) ? ErrorConstant.PARAM_ERROR : paramError, message);
+    }
+
+    private Result buildSys(String message){
+        return Result.buildFail( StringUtils.isEmpty(sysError) ? ErrorConstant.SYS_ERROR : sysError, message);
+    }
+
 }
