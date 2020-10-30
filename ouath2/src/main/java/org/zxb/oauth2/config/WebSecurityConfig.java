@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
  * http://localhost:8080/oauth/check_token?token=123123123123
  * http://localhost:8080/oauth/token?grant_type=refresh_token&refresh_token=fbde81ee-f419-42b1-1234-9191f1f95be9&client_id=clientId&client_secret=secret
  */
-@Configuration
+//@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean

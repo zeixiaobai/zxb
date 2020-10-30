@@ -30,7 +30,8 @@
     <module>redis-support</module>
     <module>rocketmq-support</module>
     <module>ouath2</module>
-</modules>
+        <module>com/template</module>
+    </modules>
 
     <build>
         <finalName>${project.name}</finalName>
